@@ -22,12 +22,23 @@
             color: var(--text-color);
         }
         .container {
-            max-width: 800px;
+            display: flex;
+            max-width: 1200px;
             margin: auto;
+            gap: 20px;
+        }
+        .form-container {
+            flex: 1;
             background: var(--input-background);
             padding: 40px;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .preview-container {
+            flex: 1;
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
         }
         h1, h2 {
             color: var(--text-color);
@@ -70,11 +81,13 @@
             padding: 20px;
             margin-top: 20px;
             border-radius: 8px;
+            background-color: var(--input-background);
         }
         .item-row {
             display: flex;
             gap: 10px;
             margin-bottom: 10px;
+            align-items: center;
         }
         .item-row input {
             flex: 1;
@@ -150,90 +163,110 @@
         .file-input-label .icon {
             margin-right: 8px;
         }
+        .delete-item {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+        }
+        .delete-item:hover svg {
+            fill: #FF4E42;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>
-            <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 4H4C2.89543 4 2 4.89543 2 6V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V6C22 4.89543 21.1046 4 20 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M16 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M8 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M2 10H22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Modern Invoice Generator
-        </h1>
-        <form id="invoiceForm">
-            <h2>
+        <div class="form-container">
+            <h1>
                 <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 7H4C2.89543 7 2 7.89543 2 9V19C2 20.1046 2.89543 21 4 21H20C21.1046 21 22 20.1046 22 19V9C22 7.89543 21.1046 7 20 7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M16 21V5C16 4.46957 15.7893 3.96086 15.4142 3.58579C15.0391 3.21071 14.5304 3 14 3H10C9.46957 3 8.96086 3.21071 8.58579 3.58579C8.21071 3.96086 8 4.46957 8 5V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M20 4H4C2.89543 4 2 4.89543 2 6V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V6C22 4.89543 21.1046 4 20 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M16 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 10H22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                Company Details
-            </h2>
-            <input type="text" id="companyName" placeholder="Company Name" required>
-            <input type="text" id="companyAddress" placeholder="Company Address" required>
-            <input type="email" id="companyEmail" placeholder="Company Email" required>
-
-            <h2>
-                <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                Client Details
-            </h2>
-            <input type="text" id="clientName" placeholder="Client Name" required>
-            <input type="text" id="clientAddress" placeholder="Client Address" required>
-            <input type="email" id="clientEmail" placeholder="Client Email" required>
-
-            <h2>
-                <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 5H7C6.46957 5 5.96086 5.21071 5.58579 5.58579C5.21071 5.96086 5 6.46957 5 7V19C5 19.5304 5.21071 20.0391 5.58579 20.4142C5.96086 20.7893 6.46957 21 7 21H17C17.5304 21 18.0391 20.7893 18.4142 20.4142C18.7893 20.0391 19 19.5304 19 19V7C19 6.46957 18.7893 5.96086 18.4142 5.58579C18.0391 5.21071 17.5304 5 17 5H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M9 5C9 4.46957 9.21071 3.96086 9.58579 3.58579C9.96086 3.21071 10.4696 3 11 3H13C13.5304 3 14.0391 3.21071 14.4142 3.58579C14.7893 3.96086 15 4.46957 15 5C15 5.53043 14.7893 6.03914 14.4142 6.41421C14.0391 6.78929 13.5304 7 13 7H11C10.4696 7 9.96086 6.78929 9.58579 6.41421C9.21071 6.03914 9 5.53043 9 5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M9 12H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M9 16H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                Invoice Items
-            </h2>
-            <div id="invoiceItems">
-                <div class="item-row">
-                    <input type="text" class="item-description" placeholder="Item description" required>
-                    <input type="number" class="item-quantity" placeholder="Quantity" required>
-                    <input type="number" class="item-price" placeholder="Price" required>
-                </div>
-            </div>
-            <button type="button" id="addItem">Add Item</button>
-
-            <h2>
-                <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M12 8V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M8 12H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                Customization
-            </h2>
-            <div class="color-picker" id="colorPicker">
-                <div class="color-option" style="background-color: #635BFF;" data-color="#635BFF"></div>
-                <div class="color-option" style="background-color: #00D4FF;" data-color="#00D4FF"></div>
-                <div class="color-option" style="background-color: #FF9F00;" data-color="#FF9F00"></div>
-                <div class="color-option" style="background-color: #FF4E42;" data-color="#FF4E42"></div>
-                <div class="color-option" style="background-color: #00C275;" data-color="#00C275"></div>
-            </div>
-            <div class="file-input-wrapper">
-                <input type="file" id="logoUpload" accept="image/*" class="file-input">
-                <label for="logoUpload" class="file-input-label">
+                Modern Invoice Generator
+            </h1>
+            <form id="invoiceForm">
+                <h2>
                     <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M20 7H4C2.89543 7 2 7.89543 2 9V19C2 20.1046 2.89543 21 4 21H20C21.1046 21 22 20.1046 22 19V9C22 7.89543 21.1046 7 20 7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 21V5C16 4.46957 15.7893 3.96086 15.4142 3.58579C15.0391 3.21071 14.5304 3 14 3H10C9.46957 3 8.96086 3.21071 8.58579 3.58579C8.21071 3.96086 8 4.46957 8 5V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <span id="fileInputText">Add Your Logo</span>
-                </label>
-            </div>
-            <button type="submit">Generate Invoice</button>
-        </form>
+                    Company Details
+                </h2>
+                <input type="text" id="companyName" placeholder="Company Name" required>
+                <input type="text" id="companyAddress" placeholder="Company Address" required>
+                <input type="email" id="companyEmail" placeholder="Company Email" required>
 
-        <div id="invoicePreview"></div>
+                <h2>
+                    <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Client Details
+                </h2>
+                <input type="text" id="clientName" placeholder="Client Name" required>
+                <input type="text" id="clientAddress" placeholder="Client Address" required>
+                <input type="email" id="clientEmail" placeholder="Client Email" required>
+
+                <h2>
+                    <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 5H7C6.46957 5 5.96086 5.21071 5.58579 5.58579C5.21071 5.96086 5 6.46957 5 7V19C5 19.5304 5.21071 20.0391 5.58579 20.4142C5.96086 20.7893 6.46957 21 7 21H17C17.5304 21 18.0391 20.7893 18.4142 20.4142C18.7893 20.0391 19 19.5304 19 19V7C19 6.46957 18.7893 5.96086 18.4142 5.58579C18.0391 5.21071 17.5304 5 17 5H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 5C9 4.46957 9.21071 3.96086 9.58579 3.58579C9.96086 3.21071 10.4696 3 11 3H13C13.5304 3 14.0391 3.21071 14.4142 3.58579C14.7893 3.96086 15 4.46957 15 5C15 5.53043 14.7893 6.03914 14.4142 6.41421C14.0391 6.78929 13.5304 7 13 7H11C10.4696 7 9.96086 6.78929 9.58579 6.41421C9.21071 6.03914 9 5.53043 9 5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 12H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 16H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Invoice Items
+                </h2>
+                <div id="invoiceItems">
+                    <div class="item-row">
+                        <input type="text" class="item-description" placeholder="Item description" required>
+                        <input type="number" class="item-quantity" placeholder="Quantity" required>
+                        <input type="number" class="item-price" placeholder="Price" required>
+                        <button type="button" class="delete-item">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <button type="button" id="addItem">Add Item</button>
+
+                <h2>
+                    <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 8V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8 12H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Customization
+                </h2>
+                <div class="color-picker" id="colorPicker">
+                    <div class="color-option" style="background-color: #635BFF;" data-color="#635BFF"></div>
+                    <div class="color-option" style="background-color: #00D4FF;" data-color="#00D4FF"></div>
+                    <div class="color-option" style="background-color: #FF9F00;" data-color="#FF9F00"></div>
+                    <div class="color-option" style="background-color: #FF4E42;" data-color="#FF4E42"></div>
+                    <div class="color-option" style="background-color: #00C275;" data-color="#00C275"></div>
+                </div>
+                <div class="file-input-wrapper">
+                    <input type="file" id="logoUpload" accept="image/*" class="file-input">
+                    <label for="logoUpload" class="file-input-label">
+                        <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span id="fileInputText">Add Your Logo</span>
+                    </label>
+                </div>
+                <button type="submit">Generate Invoice</button>
+            </form>
+        </div>
+        <div class="preview-container">
+            <div id="invoicePreview"></div>
+        </div>
     </div>
 
     <script>
@@ -251,14 +284,34 @@
             let selectedColor = '#635BFF';
 
             addItemButton.addEventListener('click', () => {
+                addInvoiceItem();
+            });
+
+            function addInvoiceItem() {
                 const newRow = document.createElement('div');
                 newRow.className = 'item-row';
                 newRow.innerHTML = `
                     <input type="text" class="item-description" placeholder="Item description" required>
                     <input type="number" class="item-quantity" placeholder="Quantity" required>
                     <input type="number" class="item-price" placeholder="Price" required>
+                    <button type="button" class="delete-item">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
                 `;
                 invoiceItems.appendChild(newRow);
+                newRow.querySelector('.delete-item').addEventListener('click', () => {
+                    invoiceItems.removeChild(newRow);
+                });
+            }
+
+            // Add delete functionality to the initial row
+            document.querySelector('.delete-item').addEventListener('click', (e) => {
+                if (invoiceItems.children.length > 1) {
+                    e.target.closest('.item-row').remove();
+                }
             });
 
             colorPicker.addEventListener('click', (e) => {
