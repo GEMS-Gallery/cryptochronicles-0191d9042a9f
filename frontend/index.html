@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Invoice Generator</title>
+    <title>Create A Invoice</title>
     <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
             --primary-color: #635BFF;
@@ -174,6 +175,28 @@
         .delete-item:hover svg {
             fill: #FF4E42;
         }
+        .download-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        .download-button:hover {
+            background-color: #45a049;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -186,7 +209,7 @@
                     <path d="M8 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M2 10H22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                Modern Invoice Generator
+                Create A Invoice
             </h1>
             <form id="invoiceForm">
                 <h2>
@@ -266,6 +289,10 @@
         </div>
         <div class="preview-container">
             <div id="invoicePreview"></div>
+            <div class="button-container">
+                <button id="downloadPDF" class="download-button" style="display: none;">Download PDF</button>
+                <a id="paymentButton" class="payment-button" style="display: none;">Pay Invoice</a>
+            </div>
         </div>
     </div>
 
@@ -281,6 +308,8 @@
             const colorPicker = document.getElementById('colorPicker');
             const logoUpload = document.getElementById('logoUpload');
             const fileInputText = document.getElementById('fileInputText');
+            const downloadPDFButton = document.getElementById('downloadPDF');
+            const paymentButton = document.getElementById('paymentButton');
             let selectedColor = '#635BFF';
 
             addItemButton.addEventListener('click', () => {
@@ -356,8 +385,27 @@
                 }
 
                 // Generate and display invoice preview
-                invoicePreview.innerHTML = await generateInvoiceHTML(invoiceData);
+                const invoiceHTML = await generateInvoiceHTML(invoiceData);
+                invoicePreview.innerHTML = invoiceHTML.content;
                 invoicePreview.style.display = 'block';
+                
+                // Show download and payment buttons
+                downloadPDFButton.style.display = 'inline-block';
+                paymentButton.style.display = 'inline-block';
+                paymentButton.href = invoiceHTML.paymentUrl;
+            });
+
+            downloadPDFButton.addEventListener('click', () => {
+                const element = document.getElementById('invoicePreview');
+                const opt = {
+                    margin: 10,
+                    filename: 'invoice.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                html2pdf().from(element).set(opt).save();
             });
 
             async function generateInvoiceHTML(data) {
@@ -378,7 +426,7 @@
                 // Create Stripe Checkout session
                 const session = await createCheckoutSession(total, data.clientEmail);
 
-                return `
+                const content = `
                     <div style="border: 2px solid ${data.colorTheme}; padding: 20px;">
                         ${data.logo ? `<img src="${data.logo}" alt="Company Logo" style="max-width: 200px; max-height: 100px;">` : ''}
                         <h2 style="color: ${data.colorTheme};">INVOICE</h2>
@@ -406,12 +454,13 @@
                             ${itemsHTML}
                             <tr>
                                 <td colspan="3" style="text-align: right; padding: 10px;"><strong>Grand Total:</strong></td>
-                                <td style="text-align: right; padding: 10px;"><strong>$${total.toFixed(2)}</strong></td>
+                <td style="text-align: right; padding: 10px;"><strong>$${total.toFixed(2)}</strong></td>
                             </tr>
                         </table>
-                        <a href="${session.url}" class="payment-button" style="background-color: ${data.colorTheme};">Pay Invoice</a>
                     </div>
                 `;
+
+                return { content, paymentUrl: session.url };
             }
 
             async function createCheckoutSession(amount, email) {
