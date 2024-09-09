@@ -1,13 +1,27 @@
 type Time = int;
-type Post = 
+type InvoiceItem = 
  record {
-   author: text;
-   body: text;
+   description: text;
+   price: float64;
+   quantity: float64;
+ };
+type Invoice = 
+ record {
+   clientAddress: text;
+   clientEmail: text;
+   clientName: text;
+   colorTheme: text;
+   companyAddress: text;
+   companyEmail: text;
+   companyName: text;
    id: nat;
+   items: vec InvoiceItem;
+   logo: opt text;
    timestamp: Time;
-   title: text;
  };
 service : {
-  createPost: (text, text, text) -> (nat);
-  getPosts: () -> (vec Post) query;
+  createInvoice: (text, text, text, text, text, text, vec InvoiceItem, 
+   text, opt text) -> (nat);
+  getAllInvoices: () -> (vec Invoice) query;
+  getInvoice: (nat) -> (opt Invoice) query;
 }
